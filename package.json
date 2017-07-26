@@ -1,0 +1,32 @@
+{
+  "name": "minpic",
+  "version": "0.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Braised-Cakes/minpic.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Braised-Cakes/minpic/issues"
+  },
+  "homepage": "https://github.com/Braised-Cakes/minpic#readme",
+  "devDependencies": {
+    "commander": "^2.9.0",
+    "crypto": "0.0.3",
+    "file-type": "^5.2.0",
+    "glob": "^7.1.1",
+    "imageinfo": "^1.0.4",
+    "md5": "^2.2.1",
+    "progress": "^1.1.8",
+    "read-chunk": "^2.0.0"
+  },
+  "dependencies": {
+    "tinify": "^1.5.0"
+  }
+}
