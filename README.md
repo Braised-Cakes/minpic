@@ -36,15 +36,15 @@ const webpackConfig = {
 ### Options
 
 * `disabled` 禁用， 默认 false
-* `keyFilePath` 存放key的文件路径，默认系统根目录/.minpic.json
-* `cacheFilePath` 存放图片压缩信息的文件路径，默认项目根目录/.minpic.txt
+* `keyFilePath` 存放key的文件路径，默认系统根目录/.minpic.json
+* `cacheFilePath` 存放图片压缩信息的文件路径，默认项目根目录/.minpic.txt
 * `force`是否强制压缩图片，默认false
-
+
 ### Callback
 * `init` 项目启动时的初始化方法
 * `completeOnce({now, all})` 每当图片压缩完成一次后，就会调用一次
 * `success` 所有图片压缩完成后调用
-* `error` 所有key都达到上限后调用该方法
+* `error` 所有key都达到上限后调用该方法
 
 ## Tips
 
