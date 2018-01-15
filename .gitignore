@@ -6,3 +6,4 @@ yarn-debug.log*
 yarn-error.log*
 dbimg/
 img2/
+.minpic.txt

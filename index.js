@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const fs = require('fs')
 const glob = require('glob')
 const path = require('path')
@@ -13,7 +11,8 @@ let keyFile = {} //key文件的json格式化
 let keyIndex = 0 //当前用的key在keyFile中的位置
 let usedkeyIndexList = [] //此次压缩过程中，使用到的key的索引的集合
 let compressedNum = 0 //压缩过的图片数量
-let firstEmit = true;
+let firstEmit = true
+let webpackCallback = null
 class Minpic {
 
     constructor(options = {}) {
@@ -23,6 +22,7 @@ class Minpic {
             cacheFilePath: path.resolve(cwd, '.minpic.txt'), //存储压缩信息的文件路径
             force: false, //是否强制压缩
             source: '', //压缩哪个目录下的
+            shell : false,  //命令行启动
             init() {},
             completeOnce() {},
             success() {},
@@ -36,18 +36,32 @@ class Minpic {
         }
 
         this.options = options
+
+        if(this.options.shell){
+            this.first()
+        }
+        
+    }
+
+    first(){
+        if (this.options.disabled) {
+            return true
+        }
+        this.options.init()
+        this.init()
+        this.build()
     }
 
     apply(compiler) {
         if (this.options.disabled) {
             return true
         }
-
         compiler.plugin("emit", (compilation, callback) => {
+            webpackCallback = callback
             if (firstEmit) {
                 this.options.init()
                 this.init()
-                this.build(callback)
+                this.build()
                 firstEmit = false
             } else {
                 callback()
@@ -85,10 +99,9 @@ class Minpic {
     /**
      * 
      * @param {*} source 
-     * @param {*} target 
-     * @param {*} cb 
+     * @param {*} target
      */
-    build(cb) {
+    build() {
         let source = path.resolve(this.options.source)
         fs.accessSync(source)
 
@@ -111,11 +124,11 @@ class Minpic {
         })
 
         if (minList.length == 0) {
-            cb()
+            this.options.success()
             return
         }
         minList.forEach((item, index) => {
-            this.toCompress(item, cb)
+            this.toCompress(item)
         })
     }
 
@@ -140,15 +153,14 @@ class Minpic {
 
     /**
      * 压缩图片
-     * @param {Object} item 
-     * @param {Function} cb 
+     * @param {Object} item
      */
-    toCompress(item, cb) {
+    toCompress(item) {
         let image = tinify.fromFile(item.source)
         image.toFile(item.target, err => {
             if (err && err.status == 429) {
                 if (this.changeKey(item)) {
-                    this.error(cb)
+                    this.error()
                 }
                 this.toCompress(item)
             } else {
@@ -159,7 +171,7 @@ class Minpic {
                     all: minList.length
                 })
                 if (compressedNum == minList.length) {
-                    this.success(cb)
+                    this.success()
                 }
             }
         })
@@ -174,14 +186,13 @@ class Minpic {
         return cacheData.includes(md5(fs.readFileSync(path)))
     }
 
-
-    success(cb) {
-        cb()
+    success() {
+        webpackCallback && webpackCallback()
         this.options.success()
     }
 
-    error(cb) {
-        cb()
+    error() {
+        webpackCallback && webpackCallback()
         this.options.error()
     }
 }
