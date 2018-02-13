@@ -124,7 +124,7 @@ class Minpic {
         })
 
         if (minList.length == 0) {
-            this.options.success()
+            this.success()
             return
         }
         minList.forEach((item, index) => {
