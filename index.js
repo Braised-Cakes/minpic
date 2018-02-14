@@ -124,7 +124,7 @@ class Minpic {
         })
 
         if (minList.length == 0) {
-            this.options.success()
+            this.success()
             return
         }
         minList.forEach((item, index) => {
@@ -170,6 +170,7 @@ class Minpic {
                     now: compressedNum,
                     all: minList.length
                 })
+                console.log(compressedNum, minList.length)
                 if (compressedNum == minList.length) {
                     this.success()
                 }
